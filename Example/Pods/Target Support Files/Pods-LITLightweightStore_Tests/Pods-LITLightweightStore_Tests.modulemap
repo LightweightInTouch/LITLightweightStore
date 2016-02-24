@@ -1,0 +1,6 @@
+framework module Pods_LITLightweightStore_Tests {
+  umbrella header "Pods-LITLightweightStore_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

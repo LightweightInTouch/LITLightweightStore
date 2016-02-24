@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = "LITLightweightStore"
   s.version          = "0.1.0"
-  s.summary          = "A short description of LITLightweightStore."
+  s.summary          = "Lightweight key-value store which gives easy data access in memory, defaults and keychain domains."
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,24 +17,36 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!  
   s.description      = <<-DESC
-                       DESC
+                     If you don't know how to store settings of your app, you can use this lightstore for this task.
+                     Choose correct policy and store items without pain.
+                     Also, you can switch policy very easy.
+                     DESC
 
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/LITLightweightStore"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
-  s.license          = 'MIT'
-  s.author           = { "Lobanov Dmitry" => "gaussblurinc@gmail.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/LITLightweightStore.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.homepage     = "https://github.com/LightweightInTouch/" + s.name
 
-  s.platform     = :ios, '7.0'
-  s.requires_arc = true
+  s.license      = { :type => "MIT", :file => "LICENSE" }
 
-  s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'LITLightweightStore' => ['Pod/Assets/*.png']
+  s.author       = { "Dmitry Lobanov" => "gaussblurinc@gmail.com" }
+
+  s.platform     = :ios
+
+  s.ios.deployment_target = "7.0"
+
+  s.source       = {
+    :git => "https://github.com/lolgear/" + s.name + ".git",
+    :submodules => false,
+    :tag => s.version.to_s
   }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.source_files  = "Pod/**/*.{h,m}"
+  s.exclude_files = "Example"
+  s.frameworks = "Foundation", "SystemConfiguration", "Security"
+
+  s.requires_arc = true
+  s.dependency 'UICKeyChainStore'
+  s.dependency 'CocoaLumberjack'
+  #s.resource_bundles = {
+  #  'LITLightweightStore' => ['Pod/Assets/*.png']
+  #}
+
 end
