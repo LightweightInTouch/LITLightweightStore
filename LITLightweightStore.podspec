@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "7.0"
 
   s.source       = {
-    :git => "https://github.com/lolgear/" + s.name + ".git",
+    :git => "https://github.com/LightweightInTouch/" + s.name + ".git",
     :submodules => false,
     :tag => s.version.to_s
   }
