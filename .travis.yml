@@ -8,6 +8,18 @@ language: objective-c
 # before_install:
 # - gem install cocoapods # Since Travis is not always on latest version
 # - pod install --project-directory=Example
+# script:
+# - set -o pipefail && xcodebuild test -workspace Example/LITLightweightStore.xcworkspace -scheme LITLightweightStore-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
+# - pod lib lint
+
+before_install:
+    - brew update
+    - if brew outdated | grep -qx xctool; then brew upgrade xctool; fi
+
 script:
-- set -o pipefail && xcodebuild test -workspace Example/LITLightweightStore.xcworkspace -scheme LITLightweightStore-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
-- pod lib lint
+    # 32-bit tests
+    - cd Example
+    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5" -find-target "LITLightweightStoreTests"
+    # 64-bit tests    
+    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5s" -find-target "LITLightweightStoreTests"
+
