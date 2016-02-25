@@ -67,6 +67,8 @@
     // removeItemForKey:
     {
         // nil key
+        // not accepted as tests?
+        
         XCTAssertNoThrow([store setItem:nil forKey:nil]);
         
         XCTAssertNoThrow([store setItem:itemProperty forKey:nil]);
@@ -92,9 +94,12 @@
     // subscription
     {
         // nil key
+        // not accepted as tests?
+        /*
         XCTAssertNoThrow(store[nil] = nil);
         
         XCTAssertNoThrow(store[nil] = itemProperty);
+        */
         
         // nil value
         store[itemProperty] = nil;

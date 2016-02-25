@@ -44,7 +44,6 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
   s.dependency 'UICKeyChainStore'
-  s.dependency 'CocoaLumberjack'
   #s.resource_bundles = {
   #  'LITLightweightStore' => ['Pod/Assets/*.png']
   #}
