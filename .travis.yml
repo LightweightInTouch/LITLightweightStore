@@ -19,7 +19,7 @@ before_install:
 script:
     # 32-bit tests
     - cd Example
-    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5" -find-target "LITLightweightStoreTests"
+    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5" -find-target "LITLightweightStore_Tests"
     # 64-bit tests    
-    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5s" -find-target "LITLightweightStoreTests"
+    - xctool -sdk iphonesimulator clean test -destination "name=iPhone 5s" -find-target "LITLightweightStore_Tests"
 

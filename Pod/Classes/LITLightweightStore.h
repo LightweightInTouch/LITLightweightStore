@@ -28,6 +28,7 @@ extern NSString* const LITLightweightStoreOptionsAllFieldsArrayKey;
 @property (nonatomic, strong, readonly) NSArray *necessaryFields;
 @property (nonatomic, copy, readonly) NSMutableDictionary *currentScopedStore;
 @property (nonatomic, copy, readonly) id storeEntity;
+@property (nonatomic, copy) void(^onError)(NSError *error);
 
 #pragma mark - Load
 - (void)setUp;

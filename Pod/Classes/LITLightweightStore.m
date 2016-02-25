@@ -9,9 +9,6 @@
 #import "LITLightweightStore.h"
 
 #import <UICKeyChainStore/UICKeyChainStore.h>
-#import <CocoaLumberjack/CocoaLumberjack.h>
-
-static DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 LITLightweightStorePolicy LITLightweightStorePolicyDefaults = @"LITLightweightStorePolicyDefaults";
 LITLightweightStorePolicy LITLightweightStorePolicyKeychain = @"LITLightweightStorePolicyKeychain";
@@ -152,7 +149,9 @@ NSString* const LITLightweightStoreOptionsAllFieldsArrayKey = @"LITLightweightSt
     NSError * error = nil;
     [self.storeEntity removeItemForKey:self.storeScopeName error:&error];
     if (error) {
-        DDLogDebug(@"error: %@", error);
+        if (self.onError) {
+            self.onError(error);
+        }
     }
 }
 
