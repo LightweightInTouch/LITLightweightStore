@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
   s.name             = "LITLightweightStore"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "Lightweight key-value store which gives easy data access in memory, defaults and keychain domains."
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.
 #   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!  
+#   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description      = <<-DESC
                      If you don't know how to store settings of your app, you can use this lightstore for this task.
                      Choose correct policy and store items without pain.
@@ -28,9 +28,8 @@ Pod::Spec.new do |s|
 
   s.author       = { "Dmitry Lobanov" => "gaussblurinc@gmail.com" }
 
-  s.platform     = :ios
-
-  s.ios.deployment_target = "7.0"
+  s.ios.deployment_target = '7.0'
+  s.osx.deployment_target = '10.9'
 
   s.source       = {
     :git => "https://github.com/LightweightInTouch/" + s.name + ".git",
