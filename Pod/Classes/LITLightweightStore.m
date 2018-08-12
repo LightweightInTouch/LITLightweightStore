@@ -33,7 +33,7 @@
 
 #pragma mark - Helpers
 - (NSArray *)necessaryFields {
-    NSArray *allFields = self.currentScopedStore.allKeys;
+    __auto_type allFields = self.currentScopedStore.allKeys;
     if (self.allFields.count) {
         allFields =
         [allFields filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<NSCopying>evaluatedObject, NSDictionary *bindings) {
@@ -44,12 +44,12 @@
 }
 
 #pragma mark - Instantiation
-- (instancetype) initWithOptions:(NSDictionary *)options {
+- (instancetype)initWithOptions:(NSDictionary *)options {
     self = [self init];
     
     _options = options;
     if (options) {
-        NSString *scopeName = options[LITLightweightStoreOptions.StoreScopeName];
+        __auto_type scopeName = (NSString *)options[LITLightweightStoreOptions.StoreScopeName];
         
         if (!scopeName) {
             return nil;
@@ -57,7 +57,7 @@
         
         _storeScopeName = scopeName;
         
-        NSArray *allFields = options[LITLightweightStoreOptions.AllFieldsArray];
+        __auto_type allFields = (NSArray *)options[LITLightweightStoreOptions.AllFieldsArray];
         _allFields = allFields;
     }
     
@@ -65,21 +65,21 @@
 }
 
 #pragma mark - Load
-- (void) setUp {
+- (void)setUp {
     
 }
 
-- (void) tearDown {
+- (void)tearDown {
     
 }
 
 
 #pragma mark - Set/Get
-- (void) setField:(NSString *)name byValue:(id)value {
+- (void)setField:(NSString *)name byValue:(id)value {
     
 }
 
-- (id) fieldByName:(NSString *)name {
+- (id)fieldByName:(NSString *)name {
     return nil;
 }
 @end
@@ -102,13 +102,13 @@
     return [[self.storeEntity dictionaryForKey:self.storeScopeName] mutableCopy];
 }
 
-- (void) tearDown {
+- (void)tearDown {
     [self.storeEntity removeObjectForKey:self.storeScopeName];
 }
 
 #pragma mark - Set/Get
-- (void) setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
-    NSMutableDictionary *dictionary = self.currentScopedStore;
+- (void)setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
+    __auto_type dictionary = self.currentScopedStore;
     if (!value) {
         [dictionary removeObjectForKey:name];
     }
@@ -120,7 +120,7 @@
     [self.storeEntity synchronize];
 }
 
-- (id) fieldByName:(id<NSCopying>)name {
+- (id)fieldByName:(id<NSCopying>)name {
     return name ? self.currentScopedStore[name] : nil;
 }
 
@@ -139,17 +139,16 @@
 - (NSMutableDictionary *)currentScopedStore {
     
     if (![self.storeEntity dataForKey:self.storeScopeName]) {
-        NSData * data = [NSKeyedArchiver archivedDataWithRootObject:@{}];
+        __auto_type data = [NSKeyedArchiver archivedDataWithRootObject:@{}];
         [self.storeEntity setData:data forKey:self.storeScopeName];
     }
     
     
-    NSMutableDictionary * dictionary =
-    [[NSKeyedUnarchiver unarchiveObjectWithData:[self.storeEntity dataForKey:self.storeScopeName]] mutableCopy];
+    __auto_type dictionary = (NSMutableDictionary *)[[NSKeyedUnarchiver unarchiveObjectWithData:[self.storeEntity dataForKey:self.storeScopeName]] mutableCopy];
     return dictionary;
 }
 
-- (void) tearDown {
+- (void)tearDown {
     NSError * error = nil;
     [self.storeEntity removeItemForKey:self.storeScopeName error:&error];
     if (error) {
@@ -160,8 +159,8 @@
 }
 
 #pragma mark - Set/Get
-- (void) setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
-    NSMutableDictionary * dictionary = self.currentScopedStore;
+- (void)setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
+    __auto_type dictionary = self.currentScopedStore;
     if (!value) {
         [dictionary removeObjectForKey:name];
     }
@@ -169,44 +168,49 @@
         dictionary[name] = value;
     }
     
-    NSData * data =
-    [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+    __auto_type data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
     [self.storeEntity setData:data forKey:self.storeScopeName];
 }
 
-- (id) fieldByName:(id<NSCopying>)name {
+- (id)fieldByName:(id<NSCopying>)name {
     return name ? self.currentScopedStore[name] : nil;
 }
 
 @end
 
 
-static NSDictionary *staticDictionaryInMemory = nil;
 @interface LITLightweightStoreMemory : LITLightweightStore
+@property (copy, nonatomic, readonly, class) NSMutableDictionary *dictionary;
 @property (nonatomic, copy, readonly) NSMutableDictionary *storeEntity;
 @end
 
 @implementation LITLightweightStoreMemory
 
++ (NSMutableDictionary *)dictionary {
+    static NSMutableDictionary *dictionary = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dictionary = [NSMutableDictionary dictionary];
+    });
+    return dictionary;
+}
+
 - (NSDictionary *)storeEntity {
-    if (!staticDictionaryInMemory) {
-        staticDictionaryInMemory = [[NSMutableDictionary alloc] init];
-    }
-    return staticDictionaryInMemory;
+    return [self.class dictionary];
 }
 
 - (NSMutableDictionary *)currentScopedStore {
     if (!self.storeEntity[self.storeScopeName]) {
-        self.storeEntity[self.storeScopeName] = [@{} mutableCopy];
+        self.storeEntity[self.storeScopeName] = [NSMutableDictionary dictionary];
     }
     return self.storeEntity[self.storeScopeName];
 }
 
 #pragma mark - Load
-- (void) setUp {
+- (void)setUp {
 }
 
-- (void) tearDown {
+- (void)tearDown {
     for (id<NSCopying> name in self.necessaryFields) {
         [self.currentScopedStore removeObjectForKey:name];
     }
@@ -214,8 +218,8 @@ static NSDictionary *staticDictionaryInMemory = nil;
 
 
 #pragma mark - Set/Get
-- (void) setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
-    NSMutableDictionary *dictionary = self.currentScopedStore;
+- (void)setField:(id<NSCopying>)name byValue:(id<NSCopying>)value {
+    __auto_type dictionary = self.currentScopedStore;
     
     if (!value) {
         [dictionary removeObjectForKey:name];
@@ -227,7 +231,7 @@ static NSDictionary *staticDictionaryInMemory = nil;
     self.storeEntity[self.storeScopeName] = dictionary;
 }
 
-- (id) fieldByName:(id<NSCopying>)name {
+- (id)fieldByName:(id<NSCopying>)name {
     return name ? self.currentScopedStore[name] : nil;
 }
 
@@ -267,18 +271,18 @@ static NSDictionary *staticDictionaryInMemory = nil;
 
 @implementation LITLightweightStore (Cluster)
 
-- (LITLightweightStorePolicy) policy {
+- (LITLightweightStorePolicy)policy {
     LITLightweightStorePolicy policy = nil;
     if (self.class == [LITLightweightStoreDefaults class]) {
-        policy = LITLightweightStorePolicyDefaults;
+        policy = LITLightweightStorePolicyType.Defaults;
     }
     
     if (self.class == [LITLightweightStoreKeychain class]) {
-        policy = LITLightweightStorePolicyKeychain;
+        policy = LITLightweightStorePolicyType.Keychain;
     }
     
     if (self.class == [LITLightweightStoreMemory class]) {
-        policy = LITLightweightStorePolicyMemory;
+        policy = LITLightweightStorePolicyType.Memory;
     }
     
     return policy;
@@ -288,30 +292,28 @@ static NSDictionary *staticDictionaryInMemory = nil;
     return [self.policy isEqualToString:policy];
 }
 
-+ (instancetype) storeWithPolicy:(LITLightweightStorePolicy)policy andOptions:(NSDictionary *)options {
-    LITLightweightStore *store = nil;
-
-    if (policy == LITLightweightStorePolicyType.Defaults) {
-        store = [[LITLightweightStoreDefaults alloc] initWithOptions:options];
++ (instancetype)storeWithPolicy:(LITLightweightStorePolicy)policy andOptions:(NSDictionary *)options {
+    if ([policy isEqualToString:LITLightweightStorePolicyType.Defaults]) {
+        return [[LITLightweightStoreDefaults alloc] initWithOptions:options];
     }
     
-    else if (policy == LITLightweightStorePolicyType.Keychain) {
-        store = [[LITLightweightStoreKeychain alloc] initWithOptions:options];
+    else if ([policy isEqualToString:LITLightweightStorePolicyType.Keychain]) {
+        return [[LITLightweightStoreKeychain alloc] initWithOptions:options];
     }
     
-    else if (policy == LITLightweightStorePolicyType.Memory) {
-        store = [[LITLightweightStoreMemory alloc] initWithOptions:options];
+    else if ([policy isEqualToString:LITLightweightStorePolicyType.Memory]) {
+        return [[LITLightweightStoreMemory alloc] initWithOptions:options];
     }
     
-    return store;
+    return nil;
 }
 
-+ (instancetype) store:(LITLightweightStore*)store switchPolicy:(LITLightweightStorePolicy)policy {
++ (instancetype)store:(LITLightweightStore*)store switchPolicy:(LITLightweightStorePolicy)policy {
     if ([store isEqualToPolicy:policy]) {
         return store;
     }
     
-    LITLightweightStore *newStore = [LITLightweightStore storeWithPolicy:policy andOptions:store.options];
+    __auto_type newStore = [LITLightweightStore storeWithPolicy:policy andOptions:store.options];
     
     for (id<NSCopying>field in [store necessaryFields]) {
         [newStore setField:field byValue:[store fieldByName:field]];
@@ -322,7 +324,7 @@ static NSDictionary *staticDictionaryInMemory = nil;
     return newStore;
 }
 
-- (instancetype) switchPolicy:(LITLightweightStorePolicy)policy {
+- (instancetype)switchPolicy:(LITLightweightStorePolicy)policy {
     return [self.class store:self switchPolicy:policy];
 }
 
