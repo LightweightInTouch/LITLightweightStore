@@ -10,12 +10,16 @@
 
 #import <UICKeyChainStore/UICKeyChainStore.h>
 
-LITLightweightStorePolicy LITLightweightStorePolicyDefaults = @"LITLightweightStorePolicyDefaults";
-LITLightweightStorePolicy LITLightweightStorePolicyKeychain = @"LITLightweightStorePolicyKeychain";
-LITLightweightStorePolicy LITLightweightStorePolicyMemory = @"LITLightweightStorePolicyMemory";
+@implementation LITLightweightStorePolicyType
++ (LITLightweightStorePolicy) Defaults { return NSStringFromSelector(_cmd); }
++ (LITLightweightStorePolicy) Keychain { return NSStringFromSelector(_cmd); }
++ (LITLightweightStorePolicy) Memory { return NSStringFromSelector(_cmd); }
+@end
 
-NSString* const LITLightweightStoreOptionsStoreScopeNameKey = @"LITLightweightStoreOptionsStoreScopeNameKey";
-NSString* const LITLightweightStoreOptionsAllFieldsArrayKey = @"LITLightweightStoreOptionsAllFieldsArrayKey";
+@implementation LITLightweightStoreOptions
++ (NSString *)StoreScopeName { return NSStringFromSelector(_cmd); }
++ (NSString *)AllFieldsArray { return NSStringFromSelector(_cmd); }
+@end
 
 @interface LITLightweightStore ()
 
@@ -45,7 +49,7 @@ NSString* const LITLightweightStoreOptionsAllFieldsArrayKey = @"LITLightweightSt
     
     _options = options;
     if (options) {
-        NSString *scopeName = options[LITLightweightStoreOptionsStoreScopeNameKey];
+        NSString *scopeName = options[LITLightweightStoreOptions.StoreScopeName];
         
         if (!scopeName) {
             return nil;
@@ -53,7 +57,7 @@ NSString* const LITLightweightStoreOptionsAllFieldsArrayKey = @"LITLightweightSt
         
         _storeScopeName = scopeName;
         
-        NSArray *allFields = options[LITLightweightStoreOptionsAllFieldsArrayKey];
+        NSArray *allFields = options[LITLightweightStoreOptions.AllFieldsArray];
         _allFields = allFields;
     }
     
@@ -286,16 +290,16 @@ static NSDictionary *staticDictionaryInMemory = nil;
 
 + (instancetype) storeWithPolicy:(LITLightweightStorePolicy)policy andOptions:(NSDictionary *)options {
     LITLightweightStore *store = nil;
-    
-    if (policy == LITLightweightStorePolicyDefaults) {
+
+    if (policy == LITLightweightStorePolicyType.Defaults) {
         store = [[LITLightweightStoreDefaults alloc] initWithOptions:options];
     }
     
-    else if (policy == LITLightweightStorePolicyKeychain) {
+    else if (policy == LITLightweightStorePolicyType.Keychain) {
         store = [[LITLightweightStoreKeychain alloc] initWithOptions:options];
     }
     
-    else if (policy == LITLightweightStorePolicyMemory) {
+    else if (policy == LITLightweightStorePolicyType.Memory) {
         store = [[LITLightweightStoreMemory alloc] initWithOptions:options];
     }
     

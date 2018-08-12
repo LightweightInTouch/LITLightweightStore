@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 
 typedef NSString* LITLightweightStorePolicy;
-extern LITLightweightStorePolicy LITLightweightStorePolicyDefaults;
-extern LITLightweightStorePolicy LITLightweightStorePolicyKeychain;
-extern LITLightweightStorePolicy LITLightweightStorePolicyMemory;
+@interface LITLightweightStorePolicyType : NSObject
+@property (copy, nonatomic, readonly, class) LITLightweightStorePolicy Defaults;
+@property (copy, nonatomic, readonly, class) LITLightweightStorePolicy Keychain;
+@property (copy, nonatomic, readonly, class) LITLightweightStorePolicy Memory;
+@end
 
-extern NSString* const LITLightweightStoreOptionsStoreScopeNameKey;
-extern NSString* const LITLightweightStoreOptionsAllFieldsArrayKey;
+@interface LITLightweightStoreOptions : NSObject
+@property (copy, nonatomic, readonly, class) NSString *StoreScopeName;
+@property (copy, nonatomic, readonly, class) NSString *AllFieldsArray;
+@end
 
 @interface LITLightweightStore : NSObject
 
