@@ -1,12 +1,14 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
-target 'LITLightweightStore_Example', :exclusive => true do
-  pod 'LITLightweightStore', :path => '../'
+def all
+	pod 'LITLightweightStore', :path => '../'
 end
 
-target 'LITLightweightStore_Tests', :exclusive => true do
-  pod 'LITLightweightStore', :path => '../'
+target 'LITLightweightStore_Example' do
+	all
+end
 
-  
+target 'LITLightweightStore_Tests' do
+	all
 end
