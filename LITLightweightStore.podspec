@@ -6,9 +6,20 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 
+class VersionFile
+  class << self
+    def version
+      File.new(self.filepath).gets.rstrip
+    end
+    def filepath
+      './VERSION'
+    end
+  end
+end
+
 Pod::Spec.new do |s|
   s.name             = "LITLightweightStore"
-  s.version          = "0.1.1"
+  s.version          = "#{VersionFile.version}"
   s.summary          = "Lightweight key-value store which gives easy data access in memory, defaults and keychain domains."
 
 # This description is used to generate tags and improve search results.
